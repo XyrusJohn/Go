@@ -1,0 +1,93 @@
+import mysql from "../config/db.js";
+
+const getRolePrefix = (role) => {
+  const prefixes = {
+    staff: "s",
+    driver: "d",
+    admin: "a",
+    super_admin: "sa",
+  };
+  return prefixes[role] || "u";
+};
+
+/**
+ * * Register's user on database
+ * ! @param {Object} input userData
+ * ? @return {Promise<Object|Number>} Registration must output a ID number
+ **/
+export const createUser = async ({
+  role = "staff",
+  lastName,
+  firstName,
+  middleInitial,
+  email,
+  password,
+}) => {
+  const insertQuery = `INSERT INTO users (role, lastName, firstName, middleInitial, email, password) VALUES (?, ?, ?, ?, ?, ?)`;
+
+  const [result] = await mysql.execute(insertQuery, [
+    role,
+    lastName,
+    firstName,
+    middleInitial,
+    email,
+    password,
+  ]);
+
+  const newUserId = result.insertId;
+  const generatedUsername = `${getRolePrefix(role)}${newUserId}`;
+
+  const updateQuery = `UPDATE users SET username = ? WHERE id= ?`;
+  await mysql.execute(updateQuery, [generatedUsername, newUserId]);
+
+  return { id: newUserId, username: generatedUsername };
+};
+
+/**
+ * * Find user via username and email
+ * ! @param {String} call the parameter as identifier
+ * ? @return {Promise<Object|null>} Check if theres duplicate of username || email
+ **/
+
+export const findUserByIdentifier = async (identifier) => {
+  const selectQuery = `SELECT id, username, lastName, firstName, middleInitial, email, password, created_at FROM users
+  WHERE email = ? OR username = ?
+  LIMIT 1
+`;
+
+  const [rows] = await mysql.execute(selectQuery, [identifier, identifier]);
+  return rows[0] || null;
+};
+
+export const findUserById = async (id) => {
+  const selectQuery = `SELECT id, username, role, lastName, firstName, middleInitial, email, password, created_at FROM users
+  WHERE id = ?
+  LIMIT 1
+`;
+
+  const [rows] = await mysql.execute(selectQuery, [id]);
+  return rows[0] || null;
+};
+
+export const updateUserProfileData = async (id, data) => {
+  const { lastName, firstName, middleInitial, phoneNumber, email } = data;
+
+  const updateQuery = `UPDATE users SET lastName = ?, firstName = ?, middleInitial = ?, phoneNumber =?, email = ? WHERE id = ? `;
+
+  const [result] = await mysql.execute(updateQuery, [
+    lastName,
+    firstName,
+    middleInitial || null,
+    phoneNumber || null,
+    email,
+    id,
+  ]);
+  return result || null;
+};
+
+export const updateUserPasswordData = async (id, hashedPassword) => {
+  const updateQuery = `UPDATE users SET password = ? WHERE id = ? `;
+
+  const [result] = await mysql.execute(updateQuery, [hashedPassword, id]);
+  return result || null;
+};

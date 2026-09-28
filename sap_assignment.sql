@@ -1,0 +1,20 @@
+USE go_fleet;
+
+CREATE TABLE IF NOT EXISTS sap_assignment (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    SAPDispatchNumber VARCHAR(50) NOT NULL UNIQUE,
+    Driver VARCHAR(100),
+    Helper VARCHAR(255),
+    Route VARCHAR(150),
+    Status VARCHAR(50) DEFAULT 'assign',
+    TotalAmount DECIMAL(15, 2) DEFAULT 0.00,
+    TotalDestination INT DEFAULT 0,
+    TotalObd INT DEFAULT 0,
+    TotalQuantity DECIMAL(15, 2) DEFAULT 0.00,
+    TotalVolume DECIMAL(15, 2) DEFAULT 0.00,
+    TotalWeight DECIMAL(15, 2) DEFAULT 0.00,
+    TruckType VARCHAR(20),
+    UnassignedShipment JSON,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
