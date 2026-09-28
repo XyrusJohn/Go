@@ -23,7 +23,12 @@ const OtpCardModal = ({ onClose, email, onVerifySuccess }) => {
     if (enteredOtp.length < 6) {
       return;
     }
-
+    // console.log(
+    //   "Payload being sent to store -> Email:",
+    //   email,
+    //   "OTP:",
+    //   enteredOtp,
+    // );
     try {
       await validateResult({ email, otp: enteredOtp });
 
@@ -91,7 +96,6 @@ const OtpCardModal = ({ onClose, email, onVerifySuccess }) => {
           ))}
         </div>
 
-        {/* IKAKABIT NATIN ANG SUBMIT HANDLER SA BUTTON */}
         <button
           onClick={handleSubmit}
           disabled={isValidatingOtp || otp.some((val) => !val)}

@@ -75,8 +75,10 @@ const Profile = () => {
 
   // Controls whether the password fields are unlocked after OTP verification
   const [enablePasswordEdit, setEnablePasswordEdit] = useState(false);
+
   // Tracks if an OTP has already been sent for the password change flow
   const [passwordOtpSend, setPasswordOtpSend] = useState(false);
+
   // Controls visibility of the OTP modal specifically for password change
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
@@ -105,7 +107,7 @@ const Profile = () => {
   }, [fetchUserProfile]);
 
   useEffect(() => {
-    if (user && Object.keys(user).length > 0) {
+    if (!enableEdit && user && Object.keys(user).length > 0) {
       setFormData({
         lastName: user.lastName || "",
         firstName: user.firstName || "",
@@ -114,7 +116,7 @@ const Profile = () => {
         phoneNumber: user.phoneNumber || "",
       });
     }
-  }, [userData]);
+  }, [user, enableEdit, setFormData]);
 
   /**
    * Starts the profile-edit verification flow.
@@ -128,7 +130,7 @@ const Profile = () => {
   const handleEditRequest = async (email) => {
     // Profile editing cannot proceed without an email address.
     if (!email) {
-      toast.error("Email is required");
+      toast("Email is required");
       return;
     }
 
@@ -138,7 +140,7 @@ const Profile = () => {
       return;
     }
 
-    console.log("Requesting OTP for", email);
+    toast("Requesting OTP for", email);
 
     // Request a new OTP before allowing the user to continue.
     await requestOtp(email);
@@ -147,30 +149,30 @@ const Profile = () => {
     setOtpSent(true);
     setIsModalOpen(true);
   };
-
+  // Handle form field changes for profile details
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-    console.log("Form data updated", formData);
+    toast("Account details is updated");
   };
 
+  // Sends the updated profile data to the backend.
   const handleSave = async () => {
     const result = await updateProfile(formData);
     if (result) {
       setEnableEdit(false);
       setOtpSent(false);
-      console.log("Profile updated", result);
+      toast("Profile updated");
     }
   };
 
+  // Requests an OTP for password change and opens the password modal.
   const handleEditPasswordRequest = async (email) => {
-    console.log("Password Send Request clicked! Email:", email);
-    console.log("passwordOtpSend state:", passwordOtpSend);
     // Profile editing cannot proceed without an email address.
     if (!email) {
-      toast.error("Email is required");
+      toast("Email is required");
       return;
     }
 
@@ -194,14 +196,12 @@ const Profile = () => {
       !passwordForm.newPassword ||
       !passwordForm.confirmPassword
     ) {
-      alert("Please fill in all password fields");
-      toast.error("Please fill in all password fields");
+      toast("Please fill in all password fields");
       return;
     }
 
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      alert("Passwords do not match");
-      toast.error("Passwords do not match");
+      toast("Passwords do not match");
       return;
     }
 

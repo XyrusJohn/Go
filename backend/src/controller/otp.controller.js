@@ -10,7 +10,6 @@ import crypto from "crypto";
 export const generateOtp = async (req, res) => {
   try {
     const userId = req.user.id;
-    // const userId = 100000000;
 
     const { email } = req.body;
     if (!email) {
@@ -18,16 +17,20 @@ export const generateOtp = async (req, res) => {
     }
 
     const otp = crypto.randomInt(100000, 999999).toString();
-    const otpExpires = new Date(Date.now() + 5 * 60 * 1000)
-      .toISOString()
-      .slice(0, 19)
-      .replace("T", " ");
-
-    // const otpData = {
-    //   otp,
-    //   otpExpires,
-    //   userId,
-    // };
+    // Fix date format to ISO string
+    const d = new Date(Date.now() + 5 * 60 * 1000);
+    const otpExpires =
+      d.getFullYear() +
+      "-" +
+      String(d.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(d.getDate()).padStart(2, "0") +
+      " " +
+      String(d.getHours()).padStart(2, "0") +
+      ":" +
+      String(d.getMinutes()).padStart(2, "0") +
+      ":" +
+      String(d.getSeconds()).padStart(2, "0");
 
     await createOtp(otp, otpExpires, userId);
 
@@ -64,43 +67,37 @@ export const verifyOtp = async (req, res) => {
   const { otp, email } = req.body;
 
   if (!otp || !email) {
-    return res.status(400).json({
-      success: false,
-      message: "OTP and email are required",
-    });
+    return res
+      .status(400)
+      .json({ success: false, message: "OTP and email are required" });
   }
 
   const user = await findUserOtpData(email);
 
   if (!user) {
-    return res.status(404).json({
-      success: false,
-      message: "User not found",
-    });
+    return res.status(404).json({ success: false, message: "User not found" });
   }
 
   if (!user.edit_otp || !user.edit_otp_expires) {
-    return res.status(400).json({
-      success: false,
-      message: "No Active OTP",
-    });
+    return res.status(400).json({ success: false, message: "No Active OTP" });
   }
 
-  if (new Date() > new Date(user.edit_otp_expires)) {
-    return res.status(400).json({
-      success: false,
-      message: "OTP expired. Please try again.",
-    });
+  const now = new Date();
+  const expiresAt = new Date(user.edit_otp_expires);
+  if (now.getTime() > expiresAt.getTime()) {
+    return res
+      .status(400)
+      .json({ success: false, message: "OTP has expired." });
   }
 
-  if (user.edit_otp !== otp) {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid OTP code. Please try again.",
-    });
+  if (String(user.edit_otp) !== String(otp)) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid OTP code." });
   }
 
   await clearOtpData(user.id);
+
   return res.status(200).json({
     success: true,
     message: "OTP verified successfully",

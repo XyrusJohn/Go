@@ -11,7 +11,7 @@ export const findUserOtpData = async (email) => {
   const selectQuery = `SELECT id, email, edit_otp, edit_otp_expires FROM users WHERE email = ? LIMIT 1`;
 
   const [rows] = await mysql.execute(selectQuery, [email]);
-  return rows || null;
+  return rows[0] || null;
 };
 
 export const clearOtpData = async (id) => {

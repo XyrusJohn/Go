@@ -59,16 +59,26 @@ export const useOtpStore = create((set) => ({
   validateResult: async (data) => {
     set({ isValidatingOtp: true });
     try {
-      await axiosInstance.post("otp/verify-otp", data, {
-        withCredentials: true,
-      });
+      const validateResultRes = await axiosInstance.post(
+        "otp/verify-otp",
+        data,
+        {
+          withCredentials: true,
+        },
+      );
 
       toast.success("OTP verified successfully");
       set({ data });
-      console.log("data", data);
+
+      return validateResultRes.data;
     } catch (error) {
-      toast.error("Failed to validate OTP");
-      console.error(error);
+      const exactError =
+        error.response?.data?.message || "Failed to validate OTP";
+
+      toast.error(`Error: ${exactError}`);
+      console.error("Backend Error Details:", error.response?.data);
+
+      throw error;
     } finally {
       set({ isValidatingOtp: false });
     }
