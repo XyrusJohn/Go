@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import FleetManagement from "./pages/FleetManagement";
 import Profile from "./pages/Profile";
+import { Toaster } from "react-hot-toast";
 
 import { useAuthStore } from "./store/useAuthStore.js";
 
@@ -34,6 +35,13 @@ const App = () => {
       {/* <div className="min-h-screen overflow-x-hidden">
         // <Navbar />
       </div> */}
+      <div>
+        {/* Iba mong components tulad ng Routes, Navbar, etc. */}
+
+        {/* Ilagay mo 'to kahit saan dito para gumana yung toast buong app */}
+        <Toaster position="top-center" reverseOrder={false} />
+      </div>
+
       <Routes>
         <Route
           path="/"

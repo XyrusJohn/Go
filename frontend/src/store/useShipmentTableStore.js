@@ -76,7 +76,9 @@ export const useShipmentTableStore = create((set) => ({
       set({ shipment: shipmentTableRow });
     } catch (error) {
       console.log("Error in fetchShipments: ", error);
-      toast.error("Failed to load shipments");
+      {
+        /* toast.error("Failed to load shipments");*/
+      }
       set({ shipment: [] }); // Fallback to empty array on error
     } finally {
       set({ isFetchingShipmentTable: false });

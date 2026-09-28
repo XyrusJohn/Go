@@ -30,7 +30,7 @@ const LoginPage = () => {
       localStorage.removeItem("snapgo_username");
     }
 
-    login(formData);
+    await login(formData);
   };
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 bg-[rgb(11,15,25)] text-white font-sans">
