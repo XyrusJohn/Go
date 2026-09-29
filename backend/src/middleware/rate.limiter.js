@@ -8,7 +8,7 @@ export const createRateLimiter = (points, duration, errorMessage) => {
   });
   return async (req, res, next) => {
     try {
-      const userId = req.user.id.toString() || req.ip;
+      const userId = req.user?.id?.toString() || req.ip;
 
       await rateLimiter.consume(userId, 1);
       next();

@@ -31,8 +31,28 @@ const upload = multer({
   },
 });
 
-router.post("/register", registerValidationRules, validateResult, register);
-router.post("/login", loginValidationRules, validateResult, login);
+router.post(
+  "/register",
+  createRateLimiter(
+    3,
+    3600,
+    "Too many accounts created. Please try again later.",
+  ),
+  registerValidationRules,
+  validateResult,
+  register,
+);
+router.post(
+  "/login",
+  createRateLimiter(
+    3,
+    60,
+    "Too many login attempts. Please wait 60 seconds to continue.",
+  ),
+  loginValidationRules,
+  validateResult,
+  login,
+);
 router.post("/logout", logout);
 
 router.get("/check", protectRoute, checkAuth);
@@ -48,6 +68,11 @@ router.put(
 router.put(
   "/update-password",
   protectRoute,
+  createRateLimiter(
+    3,
+    86400,
+    "Too many password change attempts. Please try again tomorrow.",
+  ),
   changePasswordValidationRules,
   validateResult,
   userUpdatePassword,
