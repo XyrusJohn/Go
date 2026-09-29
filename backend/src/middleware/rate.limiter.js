@@ -4,10 +4,12 @@ export const createRateLimiter = (points, duration, errorMessage) => {
   const rateLimiter = new RateLimiterMemory({
     points: points,
     duration: duration,
+    execEvenly: false,
   });
   return async (req, res, next) => {
     try {
-      const userId = req.user.id.toString();
+      const userId = req.user.id.toString() || req.ip;
+
       await rateLimiter.consume(userId, 1);
       next();
     } catch (error) {
