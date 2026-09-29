@@ -4,10 +4,12 @@ import {
   findUserById,
   updateUserProfileData,
   updateUserPasswordData,
+  updateProfilePicture,
 } from "../models/auth.model.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { generateToken } from "./../lib/utils.js";
+
+import cloudinary from "../config/cloudinary.js";
 
 export const register = async (req, res) => {
   try {
@@ -66,7 +68,6 @@ export const login = async (req, res) => {
     if (!user) {
       return res.status(401).json({ message: "Invalid username or password." });
     }
-    console.log("User found:", user.username);
     // * 2. VALIDATE IF THE USER PUT THE RIGHT PASSWORD
     // Password validation
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -256,6 +257,50 @@ export const userUpdatePassword = async (req, res) => {
     });
   } catch (error) {
     console.error("Error in userUpdatePassword controller:", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const updateUserProfilePicture = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found" });
+    }
+
+    if (!req.file) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No file uploaded" });
+    }
+
+    const b64 = Buffer.from(req.file.buffer).toString("base64");
+    const dataURI = `data:${req.file.mimetype};base64,${b64}`;
+
+    const uploadResponse = await cloudinary.uploader.upload(dataURI, {
+      folder: "go_avatar",
+      gravity: "face",
+      crop: "fill",
+      width: 400,
+      height: 400,
+    });
+
+    const profilePictureUrl = uploadResponse.secure_url;
+
+    await updateProfilePicture(userId, profilePictureUrl);
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile picture updated successfully",
+      profile_picture: profilePictureUrl,
+    });
+  } catch (error) {
+    console.error(
+      "Error in updateUserProfilePicture controller:",
+      error.message,
+    );
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
