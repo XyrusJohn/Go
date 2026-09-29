@@ -13,6 +13,7 @@ export const useAuthStore = create((set, get) => ({
   isFetchingProfile: false,
   isUpdatingProfileData: false,
   isUpdatingPasswordData: false,
+  isUpdatingProfilePicture: false,
 
   checkAuth: async () => {
     try {
@@ -103,6 +104,39 @@ export const useAuthStore = create((set, get) => ({
       toast.error(error.response?.data?.message || "Failed to update password");
     } finally {
       set({ isUpdatingPasswordData: false });
+    }
+  },
+
+  updateProfilePicture: async (imageFile) => {
+    set({ isUpdatingProfilePicture: true });
+    try {
+      const formData = new FormData();
+      formData.append("image", imageFile);
+
+      const updateProfilePictureRes = await axiosInstance.put(
+        "auth/update-profile-picture",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true,
+        },
+      );
+
+      toast.success(
+        updateProfilePictureRes.data.message ||
+          "Profile picture updated successfully",
+      );
+
+      await get().fetchUserProfile();
+
+      return true;
+    } catch (error) {
+      console.error("Error in updateProfilePicture: ", error);
+      toast.error(
+        error.response?.data?.message || "Failed to update profile picture",
+      );
+    } finally {
+      set({ isUpdatingProfilePicture: false });
     }
   },
 }));

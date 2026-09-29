@@ -58,9 +58,9 @@ export const findUserByIdentifier = async (identifier) => {
   const [rows] = await mysql.execute(selectQuery, [identifier, identifier]);
   return rows[0] || null;
 };
-
+// Need ko din ba lagyan to ng profile_picture sa pag select ng query?
 export const findUserById = async (id) => {
-  const selectQuery = `SELECT id, username, role, lastName, firstName, middleInitial, email, password, created_at FROM users
+  const selectQuery = `SELECT id, username, role, lastName, firstName, middleInitial, email, password, created_at, profile_picture FROM users
   WHERE id = ?
   LIMIT 1
 `;
@@ -89,5 +89,12 @@ export const updateUserPasswordData = async (id, hashedPassword) => {
   const updateQuery = `UPDATE users SET password = ? WHERE id = ? `;
 
   const [result] = await mysql.execute(updateQuery, [hashedPassword, id]);
+  return result || null;
+};
+
+export const updateProfilePicture = async (id, profilePicUrl) => {
+  const updateQuery = `UPDATE users SET profile_picture = ? WHERE id = ? `;
+
+  const [result] = await mysql.execute(updateQuery, [profilePicUrl, id]);
   return result || null;
 };
