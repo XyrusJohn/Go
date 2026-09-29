@@ -349,7 +349,7 @@ const Profile = () => {
 
             {/* USER ROLE */}
             <div className="bg-gray-200 text-gray-600 border border-gray-300 text-sm font-bold uppercase px-3 py-0.5 rounded-full mt-1 tracking-wider">
-              {user.role}
+              {user.role.split("_").join(" ")}
             </div>
           </div>
 
