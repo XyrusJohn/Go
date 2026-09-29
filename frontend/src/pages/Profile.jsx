@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import Sidebar from "./../components/Sidebar";
 import Navbar from "./../components/Navbar";
 import OtpCardModal from "./../components/OtpCardModal";
+import AvatarUploadModal from "./../components/AvatarUploadModal";
 
 import { useAuthStore } from "../store/useAuthStore";
 import { useOtpStore } from "../store/useOtpStore";
 import toast from "react-hot-toast";
 
-import { Loader } from "lucide-react";
+import { Loader, Camera } from "lucide-react";
 
 /**
  * Reusable form input component used throughout the profile page.
@@ -81,6 +82,9 @@ const Profile = () => {
 
   // Controls visibility of the OTP modal specifically for password change
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+
+  // Controls visibility of the avatar upload modal
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     lastName: user.lastName || "",
@@ -239,6 +243,9 @@ const Profile = () => {
           <Loader className="size-12 animate-spin text-[#9A0AED]" />
         </div>
       )}
+      {isUploadModalOpen && (
+        <AvatarUploadModal onClose={() => setIsUploadModalOpen(false)} />
+      )}
       {/*
         OTP verification is rendered conditionally so the modal exists
         only while the profile-edit verification flow is active.
@@ -307,7 +314,28 @@ const Profile = () => {
             )}
 
             {/* Profile avatar placeholder */}
-            <div className="w-32 h-32 bg-[#D9D9D9] rounded-full mb-4 mt-8 md:mt-4"></div>
+            <div
+              className="relative w-32 h-32 mb-4 mt-8 md:mt-4 group cursor-pointer"
+              onClick={() => setIsUploadModalOpen(true)}
+            >
+              {user.profile_picture ? (
+                <img
+                  src={user.profile_picture}
+                  alt="Profile Avatar"
+                  className="w-full h-full rounded-full object-cover shadow-sm border-4 border-white"
+                />
+              ) : (
+                <div className="w-full h-full bg-[#D9D9D9] rounded-full shadow-sm border-4 border-white"></div>
+              )}
+
+              {/* Hover Overlay: Maitim na background at Camera icon */}
+              <div className="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center">
+                <Camera className="text-white size-8 mb-1" />
+                <span className="text-white text-[10px] font-bold uppercase tracking-wider">
+                  Update
+                </span>
+              </div>
+            </div>
 
             {/* USER NAME */}
             <h2 className="text-[22px] font-black uppercase tracking-wide">

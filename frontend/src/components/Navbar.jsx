@@ -41,7 +41,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="navbar fixed top-0 left-0 w-full h-16 mt-2 bg-transparent flex justify-center items-center lg:gap-400 md:gap-150 gap-100 z-40">
+    <div className="text-black navbar fixed top-0 left-0 w-full h-16 mt-2 bg-transparent flex justify-center items-center lg:gap-400 md:gap-150 gap-100 z-40">
       <div>logo</div>
       {/* Avatar */}
       <div
@@ -50,7 +50,17 @@ const Navbar = () => {
         onClick={() => setShowProfileMenu(!showProfileMenu)}
       >
         <div className="avatar">
-          <div className="ring-green-500 w-8 rounded-full ring-2 ring-offset-2"></div>
+          <div className="ring-white w-12 rounded-full">
+            {user.profile_picture ? (
+              <img
+                src={user.profile_picture}
+                alt="Profile Avatar"
+                className="w-full h-full rounded-full object-cover shadow-sm"
+              />
+            ) : (
+              <div className="w-full h-full bg-[#D9D9D9] rounded-full shadow-sm border-4 border-white"></div>
+            )}
+          </div>
         </div>
         {showProfileMenu && (
           <ul className="absolute top-12 flex w-48 flex-col items-center justify-center gap-3 rounded-xl bg-white py-3 pl-1 shadow-xl border border-gray-100">
