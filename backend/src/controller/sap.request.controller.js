@@ -17,7 +17,7 @@ export const getSapData = async (req, res) => {
 
     const sapActualData = sapRes.data.d.results;
 
-    console.log(sapActualData);
+    // console.log(sapActualData);
     res.json(sapActualData);
   } catch (error) {
     console.error("Error fetching SAP data:", error.message);

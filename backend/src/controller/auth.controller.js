@@ -8,6 +8,7 @@ import {
 } from "../models/auth.model.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "./../lib/utils.js";
+import { uploadWithRetry } from "./../lib/cloudinaryHelper.js";
 
 import cloudinary from "../config/cloudinary.js";
 
@@ -279,7 +280,7 @@ export const updateUserProfilePicture = async (req, res) => {
     const b64 = Buffer.from(req.file.buffer).toString("base64");
     const dataURI = `data:${req.file.mimetype};base64,${b64}`;
 
-    const uploadResponse = await cloudinary.uploader.upload(dataURI, {
+    const uploadResponse = await uploadWithRetry(dataURI, {
       folder: "go_avatar",
       gravity: "face",
       crop: "fill",
