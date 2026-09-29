@@ -63,7 +63,7 @@ const Navbar = () => {
           </div>
         </div>
         {showProfileMenu && (
-          <ul className="absolute top-12 flex w-48 flex-col items-center justify-center gap-3 rounded-xl bg-white py-3 pl-1 shadow-xl border border-gray-100">
+          <ul className="absolute top-12 flex w-48 flex-col items-center justify-center gap-3 rounded-xl bg-white py-3 pl-1 shadow-xl border border-gray-100 mt-2">
             <div className="flex flex-col items-center justify-center text-sm text-center">
               <div className="font-bold">
                 {user.lastName}, {user.firstName} {user.middleInitial || " "}
