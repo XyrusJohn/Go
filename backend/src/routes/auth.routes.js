@@ -35,7 +35,7 @@ router.post(
   "/register",
   createRateLimiter(
     3,
-    3600,
+    3600, // 1 hour
     "Too many accounts created. Please try again later.",
   ),
   registerValidationRules,
@@ -46,16 +46,18 @@ router.post(
   "/login",
   createRateLimiter(
     3,
-    60,
-    "Too many login attempts. Please wait 60 seconds to continue.",
+    300, // 5 minutes
+    "Too many login attempts. Please wait 5 minutes to continue.",
   ),
   loginValidationRules,
   validateResult,
   login,
 );
+
 router.post("/logout", logout);
 
 router.get("/check", protectRoute, checkAuth);
+
 router.get("/profile", protectRoute, fetchUserProfile);
 
 router.put(
@@ -65,24 +67,26 @@ router.put(
   validateResult,
   updateUserProfile,
 );
+
 router.put(
   "/update-password",
   protectRoute,
   createRateLimiter(
     3,
-    86400,
+    86400, // 1 day
     "Too many password change attempts. Please try again tomorrow.",
   ),
   changePasswordValidationRules,
   validateResult,
   userUpdatePassword,
 );
+
 router.put(
   "/update-profile-picture",
   protectRoute,
   createRateLimiter(
     3,
-    3600,
+    3600, // 1 hour
     "Too many upload attempts. Please try again after an hour.",
   ),
   upload.single("image"),

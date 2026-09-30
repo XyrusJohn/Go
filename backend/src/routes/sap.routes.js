@@ -16,38 +16,41 @@ router.get(
   "/get-sap-data",
   protectRoute,
   createRateLimiter(
-    10,
-    60,
+    10, // 10 requests
+    60, // 1 minute
     "Too many SAP data requests. Please wait 60 seconds to continue.",
   ),
   getSapData,
 );
+
 router.post(
   "/shipment-registration",
   protectRoute,
   createRateLimiter(
-    5,
-    60,
+    5, // 5 requests
+    60, // 1 minute
     "Too many shipment registration requests. Please wait 60 seconds to continue.",
   ),
   shipmentRegistration,
 );
+
 router.get(
   "/shipment-assignment",
   protectRoute,
   createRateLimiter(
-    30,
-    60,
+    30, // 30 requests
+    60, // 1 minute
     "Too many shipment assignment requests. Please wait 60 seconds to continue.",
   ),
   getShipmentAssignment,
 );
+
 router.get(
   "/metrics",
   protectRoute,
   createRateLimiter(
-    10,
-    60,
+    10, // 10 requests
+    60, // 1 minute
     "Too many metrics requests. Please wait 60 seconds to continue.",
   ),
   getShipmentMetrics,

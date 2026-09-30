@@ -10,17 +10,18 @@ router.post(
   protectRoute,
   createRateLimiter(
     3,
-    300,
+    300, // 5 minutes
     "Too many OTP requests. Please wait a few minutes before trying again.",
   ),
   generateOtp,
 );
+
 router.post(
   "/verify-otp",
   protectRoute,
   createRateLimiter(
     5,
-    900,
+    300, // 5 minutes
     "Too many OTP verification attempts. Please try again later.",
   ),
   verifyOtp,
