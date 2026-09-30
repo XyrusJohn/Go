@@ -1,9 +1,5 @@
 import { useEffect } from "react";
-import Overview from "./pages/Overview";
-import LoginPage from "./pages/LoginPage";
-import RegistrationPage from "./pages/RegistrationPage";
-import FleetManagement from "./pages/FleetManagement";
-import Profile from "./pages/Profile";
+
 import { Toaster } from "react-hot-toast";
 
 import { useAuthStore } from "./store/useAuthStore.js";
@@ -12,7 +8,14 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import { Loader } from "lucide-react";
 
+import Overview from "./pages/Overview";
+import LoginPage from "./pages/LoginPage";
+import RegistrationPage from "./pages/RegistrationPage";
+import FleetManagement from "./pages/FleetManagement";
+import Profile from "./pages/Profile";
 import Dispatch from "./pages/Dispatch";
+import EmployeeAndStaff from "./pages/EmployeeAndStaff";
+
 // import Navbar from "./components/Navbar";
 
 const App = () => {
@@ -66,6 +69,10 @@ const App = () => {
         <Route
           path="/dispatch"
           element={authUser ? <Dispatch /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/employee-and-staff"
+          element={authUser ? <EmployeeAndStaff /> : <Navigate to="/login" />}
         />
       </Routes>
     </div>

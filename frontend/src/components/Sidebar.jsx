@@ -24,8 +24,8 @@ const SubMenuItem = ({ title, path, rightElement }) => (
   <Link
     to={path || "#"}
     className="relative flex items-center h-10 hover:opacity-70
-               before:absolute before:left-0 before:top-[-8px] before:bottom-0 
-               before:border-l-[1.5px] before:border-black 
+               before:absolute before:left-0 before:top-[-8px] before:bottom-0
+               before:border-l-[1.5px] before:border-black
                last:before:bottom-1/2"
   >
     <div className="absolute left-0 top-1/2 w-[16px] border-b-[1.5px] border-black"></div>
@@ -142,7 +142,10 @@ const Sidebar = () => {
             </MenuItem>
 
             <MenuItem icon={UserCircle} title="User Management">
-              <SubMenuItem title="Employee & Staff" />
+              <SubMenuItem
+                title="Employee & Staff"
+                path="/employee-and-staff"
+              />
               <SubMenuItem title="Requests" />
             </MenuItem>
 
