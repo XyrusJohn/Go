@@ -10,8 +10,6 @@ import bcrypt from "bcrypt";
 import { generateToken } from "./../lib/utils.js";
 import { uploadWithRetry } from "./../lib/cloudinaryHelper.js";
 
-import cloudinary from "../config/cloudinary.js";
-
 export const register = async (req, res) => {
   try {
     // * NOTE: Already been sanitized from auth.validation
@@ -63,7 +61,7 @@ export const register = async (req, res) => {
 };
 export const login = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, source } = req.body;
     // * 1. FIND USERNAME
     const user = await findUserByIdentifier(username);
     if (!user) {
@@ -76,6 +74,14 @@ export const login = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid username or password." });
     }
+
+    if (source === "web" && user.role === "driver") {
+      return res.status(403).json({
+        success: false,
+        message: "Access Denied: Driver users cannot log in via web.",
+      });
+    }
+
     // * GENERATE JWT TOKEN
     const token = generateToken(user.id, res);
 

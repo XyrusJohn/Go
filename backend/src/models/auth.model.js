@@ -60,7 +60,7 @@ export const findUserByIdentifier = async (identifier) => {
 };
 // Need ko din ba lagyan to ng profile_picture sa pag select ng query?
 export const findUserById = async (id) => {
-  const selectQuery = `SELECT id, username, role, lastName, firstName, middleInitial, email, password, created_at, profile_picture FROM users
+  const selectQuery = `SELECT id, username, role, lastName, firstName, middleInitial, email, password, created_at, profile_picture, status FROM users
   WHERE id = ?
   LIMIT 1
 `;
@@ -98,3 +98,35 @@ export const updateProfilePicture = async (id, profilePicUrl) => {
   const [result] = await mysql.execute(updateQuery, [profilePicUrl, id]);
   return result || null;
 };
+
+export const getWebEmployeeData = async () => {
+  const selectQuery = `SELECT id, username, role, firstName, lastName, middleInitial, email, created_at, profile_picture, status, requested_role FROM users
+  WHERE role IN ('super_admin', 'admin','staff') ORDER BY created_at DESC
+  `;
+
+  const [rows] = await mysql.execute(selectQuery);
+  return rows || null;
+};
+
+export const updateUserRole = async (id, requestedRole) => {
+  const updateQuery = `UPDATE users SET role = ?, requested_role = NULL WHERE id = ?`;
+
+  const [result] = await mysql.execute(updateQuery, [requestedRole, id]);
+  return result || null;
+};
+
+export const requestRoleChange = async (id, requestRole) => {
+  const updateQuery = `UPDATE users SET request_role = ? WHERE id = ?`;
+
+  const [result] = await mysql.execute(updateQuery, [requestRole, id]);
+  return result || null;
+};
+
+export const deactivateUserById = async (id) => {
+  const updateQuery = `UPDATE users SET status = 'inactive' WHERE id = ? `;
+
+  const [result] = await mysql.execute(updateQuery, [id]);
+  return result || null;
+};
+
+// TODO: Delete user to be follow
