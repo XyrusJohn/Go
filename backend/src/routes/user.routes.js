@@ -18,8 +18,8 @@ router.get(
   authorizeRole("super_admin", "admin", "staff"),
   createRateLimiter(
     3,
-    300, // 5 minutes
-    "Too many OTP requests. Please wait a few minutes before trying again.",
+    60, // 1 minute
+    "Too many requests to get employees. Please wait a few minutes before trying again.",
   ),
   getWebEmployee,
 );
@@ -30,7 +30,7 @@ router.post(
   authorizeRole("staff"),
   createRateLimiter(
     5,
-    300, // 5 minutes
+    60, // 1 minute
     "Too many requests for role change. Please try again later.",
   ),
   requestRole,
@@ -42,7 +42,7 @@ router.put(
   authorizeRole("super_admin", "admin"),
   createRateLimiter(
     5,
-    300, // 5 minutes
+    60, // 1 minute
     "Too many role change requests. Please try again later.",
   ),
   updateRole,
@@ -54,7 +54,7 @@ router.put(
   authorizeRole("super_admin"),
   createRateLimiter(
     5,
-    300, // 5 minutes
+    60, // 1 minute
     "Too many deactivation requests. Please try again later.",
   ),
   deactivateUser,

@@ -8,7 +8,6 @@ import {
 
 export const getWebEmployee = async (req, res) => {
   try {
-    //placeholder
     const employees = await getWebEmployeeData();
 
     if (!employees) {

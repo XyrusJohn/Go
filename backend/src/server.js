@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "../src/routes/auth.routes.js";
 import sapRoute from "../src/routes/sap.routes.js";
 import otpRoute from "../src/routes/otp.routes.js";
+import userRoute from "../src/routes/user.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/sap", sapRoute);
 app.use("/api/otp", otpRoute);
+app.use("/api/user", userRoute);
 
 app.listen(PORT, async () => {
   console.log(`Server Connected ${PORT}`);

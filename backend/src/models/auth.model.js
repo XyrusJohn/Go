@@ -116,7 +116,7 @@ export const updateUserRole = async (id, requestedRole) => {
 };
 
 export const requestRoleChange = async (id, requestRole) => {
-  const updateQuery = `UPDATE users SET request_role = ? WHERE id = ?`;
+  const updateQuery = `UPDATE users SET requested_role = ? WHERE id = ?`;
 
   const [result] = await mysql.execute(updateQuery, [requestRole, id]);
   return result || null;
