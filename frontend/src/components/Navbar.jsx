@@ -41,7 +41,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="text-black navbar fixed top-0 left-0 w-full h-16 mt-2 bg-transparent flex justify-center items-center lg:gap-400 md:gap-150 gap-100 z-40">
+    <div className="text-black navbar fixed top-0 left-0 w-full h-16 mt-1 bg-transparent flex justify-center items-center lg:gap-320 md:gap-100 gap-100 z-40">
       <div>logo</div>
       {/* Avatar */}
       <div

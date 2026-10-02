@@ -3,6 +3,7 @@ import {
   updateRole,
   requestRole,
   deactivateUser,
+  activateUser,
 } from "../controller/user.controller.js";
 import { Router } from "express";
 import { protectRoute } from "../middleware/auth.middleware.js";
@@ -16,11 +17,11 @@ router.get(
   "/employees",
   protectRoute,
   authorizeRole("super_admin", "admin", "staff"),
-  createRateLimiter(
-    3,
-    60, // 1 minute
-    "Too many requests to get employees. Please wait a few minutes before trying again.",
-  ),
+  // createRateLimiter(
+  //   3,
+  //   60, // 1 minute
+  //   "Too many requests to get employees. Please wait a few minutes before trying again.",
+  // ),
   getWebEmployee,
 );
 
@@ -54,10 +55,22 @@ router.put(
   authorizeRole("super_admin"),
   createRateLimiter(
     5,
-    60, // 1 minute
+    10, // 1 minute
     "Too many deactivation requests. Please try again later.",
   ),
   deactivateUser,
+);
+
+router.put(
+  "/activate/:id",
+  protectRoute,
+  authorizeRole("super_admin"),
+  createRateLimiter(
+    5,
+    10, // 1 minute
+    "Too many activation requests. Please try again later.",
+  ),
+  activateUser,
 );
 
 export default router;

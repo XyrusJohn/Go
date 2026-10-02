@@ -4,10 +4,12 @@ import {
   requestRoleChange,
   deactivateUserById,
   findUserById,
+  activateUserById,
 } from "../models/auth.model.js";
 
 export const getWebEmployee = async (req, res) => {
   try {
+    //placeholder
     const employees = await getWebEmployeeData();
 
     if (!employees) {
@@ -122,6 +124,36 @@ export const deactivateUser = async (req, res) => {
     });
   } catch (error) {
     console.log("Error in deactivateUser", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const activateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required",
+      });
+    }
+
+    if (req.user.id.toString() === id.toString()) {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot activate yourself",
+      });
+    }
+
+    await activateUserById(id);
+    res.status(200).json({
+      success: true,
+      message: "User activated successfully",
+    });
+    // console.log("User activated successfully", id);
+  } catch (error) {
+    console.log("Error in activateUser", error);
     res.status(500).json({ message: error.message });
   }
 };

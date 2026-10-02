@@ -40,7 +40,7 @@ export const useUserStore = create((set, get) => ({
       );
 
       if (updateRoleRes.data.success) {
-        get().fetchUserData();
+        get().fetchUsersData();
       }
     } catch (error) {
       const exactError =
@@ -62,7 +62,7 @@ export const useUserStore = create((set, get) => ({
 
       if (roleChangeRes.data.success) {
         toast.success("Role change request submitted successfully");
-        get().fetchUserData();
+        get().fetchUsersData();
       }
     } catch (error) {
       const exactError =
@@ -76,16 +76,32 @@ export const useUserStore = create((set, get) => ({
   deactivateUser: async (id) => {
     try {
       const deactivateUserRes = await axiosInstance.put(
-        `user/deactivate/${id}/`,
+        `user/deactivate/${id}`,
       );
 
       if (deactivateUserRes.data.success) {
         toast.success("User deactivated successfully");
-        get().fetchUserData();
+        get().fetchUsersData();
       }
     } catch (error) {
       const exactError =
         error.response?.data?.message || "Failed to deactivate user";
+
+      toast.error(`Error: ${exactError}`);
+      console.error("Backend Error Details:", error.response?.data);
+    }
+  },
+  activateUser: async (id) => {
+    try {
+      const activateUserRes = await axiosInstance.put(`user/activate/${id}`);
+
+      if (activateUserRes.data.success) {
+        toast.success("User activated successfully");
+        get().fetchUsersData();
+      }
+    } catch (error) {
+      const exactError =
+        error.response?.data?.message || "Failed to activate user";
 
       toast.error(`Error: ${exactError}`);
       console.error("Backend Error Details:", error.response?.data);

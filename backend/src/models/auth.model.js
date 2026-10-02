@@ -129,4 +129,13 @@ export const deactivateUserById = async (id) => {
   return result || null;
 };
 
+export const activateUserById = async (id) => {
+  console.log("Executing activate query for user ID:", id);
+  const updateQuery = `UPDATE users SET status = 'active' WHERE id = ? `;
+
+  const [result] = await mysql.execute(updateQuery, [id]);
+  console.log("SQL Result:", result);
+  return result || null;
+};
+
 // TODO: Delete user to be follow
