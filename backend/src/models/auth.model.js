@@ -15,6 +15,7 @@ const getRolePrefix = (role) => {
  * ! @param {Object} input userData
  * ? @return {Promise<Object|Number>} Registration must output a ID number
  **/
+// Change: Takes first 2 chars to lastName and add user ID to username
 export const createUser = async ({
   role = "staff",
   lastName,
@@ -35,7 +36,7 @@ export const createUser = async ({
   ]);
 
   const newUserId = result.insertId;
-  const generatedUsername = `${getRolePrefix(role)}${newUserId}`;
+  const generatedUsername = `${lastName.slice(0, 2).toUpperCase()}${newUserId}`;
 
   const updateQuery = `UPDATE users SET username = ? WHERE id= ?`;
   await mysql.execute(updateQuery, [generatedUsername, newUserId]);
@@ -130,12 +131,15 @@ export const deactivateUserById = async (id) => {
 };
 
 export const activateUserById = async (id) => {
-  console.log("Executing activate query for user ID:", id);
   const updateQuery = `UPDATE users SET status = 'active' WHERE id = ? `;
 
   const [result] = await mysql.execute(updateQuery, [id]);
-  console.log("SQL Result:", result);
   return result || null;
 };
 
-// TODO: Delete user to be follow
+export const deleteUserById = async (id) => {
+  const deleteQuery = `DELETE FROM users WHERE id = ? `;
+
+  const [result] = await mysql.execute(deleteQuery, [id]);
+  return result.affectedRows > 0;
+};
