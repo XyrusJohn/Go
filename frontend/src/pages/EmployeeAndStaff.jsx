@@ -50,6 +50,7 @@ const EmployeeAndStaff = () => {
     requestRoleChange,
     deactivateUser,
     activateUser,
+    deleteUser,
   } = useUserStore();
 
   const { authUser } = useAuthStore();
@@ -360,38 +361,37 @@ const EmployeeAndStaff = () => {
                         {isAdmin && (
                           <>
                             <td className="px-4 py-4 text-center">
-                              {employee.status === "active" ? (
-                                <button
-                                  onClick={() => deactivateUser(employee.id)}
-                                  type="button"
-                                  className="whitespace-nowrap rounded-full border border-amber-600 bg-amber-500 px-2.5 py-1 text-[10px] text-white transition hover:bg-amber-600"
-                                >
-                                  DEACTIVATE
-                                </button>
-                              ) : (
-                                <button
-                                  onClick={() => activateUser(employee.id)}
-                                  type="button"
-                                  className="whitespace-nowrap rounded-full border border-green-700 bg-green-600 px-2.5 py-1 text-[10px] text-white transition hover:bg-green-700"
-                                >
-                                  ACTIVATE
-                                </button>
-                              )}
+                              {!isSelf ? (
+                                employee.status === "active" ? (
+                                  <button
+                                    onClick={() => deactivateUser(employee.id)}
+                                    type="button"
+                                    className="whitespace-nowrap rounded-full border border-amber-600 bg-amber-500 px-2.5 py-1 text-[10px] text-white transition hover:bg-amber-600"
+                                  >
+                                    DEACTIVATE
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => activateUser(employee.id)}
+                                    type="button"
+                                    className="whitespace-nowrap rounded-full border border-green-700 bg-green-600 px-2.5 py-1 text-[10px] text-white transition hover:bg-green-700"
+                                  >
+                                    ACTIVATE
+                                  </button>
+                                )
+                              ) : null}
                             </td>
 
                             <td className="px-4 py-4 text-center">
-                              <button
-                                onClick={() =>
-                                  console.log(
-                                    "Delete feature to be followed for ID:",
-                                    employee.id,
-                                  )
-                                }
-                                type="button"
-                                className="whitespace-nowrap rounded-full border border-red-600 bg-red-500 px-2.5 py-1 text-[10px] text-white transition hover:bg-red-600"
-                              >
-                                DELETE
-                              </button>
+                              {!isSelf ? (
+                                <button
+                                  onClick={() => deleteUser(employee.id)}
+                                  type="button"
+                                  className="whitespace-nowrap rounded-full border border-red-600 bg-red-500 px-2.5 py-1 text-[10px] text-white transition hover:bg-red-600"
+                                >
+                                  DELETE
+                                </button>
+                              ) : null}
                             </td>
                           </>
                         )}
