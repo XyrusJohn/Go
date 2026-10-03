@@ -4,6 +4,7 @@ import {
   requestRole,
   deactivateUser,
   activateUser,
+  deleteUser,
 } from "../controller/user.controller.js";
 import { Router } from "express";
 import { protectRoute } from "../middleware/auth.middleware.js";
@@ -55,7 +56,7 @@ router.put(
   authorizeRole("super_admin"),
   createRateLimiter(
     5,
-    10, // 1 minute
+    60, // 1 minute
     "Too many deactivation requests. Please try again later.",
   ),
   deactivateUser,
@@ -67,10 +68,22 @@ router.put(
   authorizeRole("super_admin"),
   createRateLimiter(
     5,
-    10, // 1 minute
+    60, // 1 minute
     "Too many activation requests. Please try again later.",
   ),
   activateUser,
+);
+
+router.delete(
+  "/delete/:id",
+  protectRoute,
+  authorizeRole("super_admin"),
+  createRateLimiter(
+    5,
+    60, // 1 minute
+    "Too many delete requests. Please try again later.",
+  ),
+  deleteUser,
 );
 
 export default router;

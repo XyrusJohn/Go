@@ -107,4 +107,21 @@ export const useUserStore = create((set, get) => ({
       console.error("Backend Error Details:", error.response?.data);
     }
   },
+
+  deleteUser: async (id) => {
+    try {
+      const deleteUserRes = await axiosInstance.delete(`user/delete/${id}`);
+
+      if (deleteUserRes.data.success) {
+        toast.success("User deleted successfully");
+        get().fetchUsersData();
+      }
+    } catch (error) {
+      const exactError =
+        error.response?.data?.message || "Failed to delete user";
+
+      toast.error(`Error: ${exactError}`);
+      console.error("Backend Error Details:", error.response?.data);
+    }
+  },
 }));
