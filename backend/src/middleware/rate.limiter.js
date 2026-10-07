@@ -2,9 +2,9 @@ import { RateLimiterMemory } from "rate-limiter-flexible";
 
 export const createRateLimiter = (points, duration, errorMessage) => {
   const rateLimiter = new RateLimiterMemory({
-    points: points,
-    duration: duration,
-    execEvenly: false,
+    points: points, // tries
+    duration: duration, // refills every duration ms
+    execEvenly: false, // refills evenly across duration ms
   });
   return async (req, res, next) => {
     try {

@@ -59,11 +59,8 @@ const EmployeeAndStaff = () => {
   const currentUsername = authUser?.data?.username || authUser?.username;
   const currentUserEmail = authUser?.data?.email || authUser?.email;
 
-  const currentUserRole = (
-    authUser?.data?.role ||
-    authUser?.role ||
-    ""
-  ).toLowerCase();
+  const rawRole = authUser?.data?.role || authUser?.role || "";
+  const currentUserRole = rawRole.toLowerCase().replace(" ", "_");
 
   const isAdmin =
     currentUserRole === "super_admin" || currentUserRole === "admin";

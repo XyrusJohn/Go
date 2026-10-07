@@ -6,9 +6,10 @@ import {
   updateUserPasswordData,
   updateProfilePicture,
 } from "../models/auth.model.js";
-import bcrypt from "bcrypt";
 import { generateToken } from "./../lib/utils.js";
 import { uploadWithRetry } from "./../lib/cloudinaryHelper.js";
+
+import bcrypt from "bcrypt";
 
 export const register = async (req, res) => {
   try {
@@ -59,6 +60,7 @@ export const register = async (req, res) => {
       .json({ message: "Server Error", error: error.message });
   }
 };
+
 export const login = async (req, res) => {
   try {
     const { username, password, source } = req.body;

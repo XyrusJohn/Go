@@ -24,7 +24,7 @@ export const createUser = async ({
   email,
   password,
 }) => {
-  const insertQuery = `INSERT INTO users (role, lastName, firstName, middleInitial, email, password) VALUES (?, ?, ?, ?, ?, ?)`;
+  const insertQuery = `INSERT INTO staff (role, lastName, firstName, middleInitial, email, password) VALUES (?, ?, ?, ?, ?, ?)`;
 
   const [result] = await mysql.execute(insertQuery, [
     role,
@@ -38,7 +38,7 @@ export const createUser = async ({
   const newUserId = result.insertId;
   const generatedUsername = `${lastName.slice(0, 2).toUpperCase()}${newUserId}`;
 
-  const updateQuery = `UPDATE users SET username = ? WHERE id= ?`;
+  const updateQuery = `UPDATE staff SET username = ? WHERE id= ?`;
   await mysql.execute(updateQuery, [generatedUsername, newUserId]);
 
   return { id: newUserId, username: generatedUsername };
@@ -51,7 +51,7 @@ export const createUser = async ({
  **/
 
 export const findUserByIdentifier = async (identifier) => {
-  const selectQuery = `SELECT id, username, lastName, firstName, middleInitial, email, password, created_at FROM users
+  const selectQuery = `SELECT id, username, lastName, firstName, middleInitial, email, password, created_at FROM staff
   WHERE email = ? OR username = ?
   LIMIT 1
 `;
@@ -59,9 +59,9 @@ export const findUserByIdentifier = async (identifier) => {
   const [rows] = await mysql.execute(selectQuery, [identifier, identifier]);
   return rows[0] || null;
 };
-// Need ko din ba lagyan to ng profile_picture sa pag select ng query?
+
 export const findUserById = async (id) => {
-  const selectQuery = `SELECT id, username, role, lastName, firstName, middleInitial, email, password, created_at, profile_picture, status FROM users
+  const selectQuery = `SELECT id, username, role, lastName, firstName, middleInitial, email, password, created_at, profile_picture, status FROM staff
   WHERE id = ?
   LIMIT 1
 `;
@@ -73,7 +73,7 @@ export const findUserById = async (id) => {
 export const updateUserProfileData = async (id, data) => {
   const { lastName, firstName, middleInitial, phoneNumber, email } = data;
 
-  const updateQuery = `UPDATE users SET lastName = ?, firstName = ?, middleInitial = ?, phoneNumber =?, email = ? WHERE id = ? `;
+  const updateQuery = `UPDATE staff SET lastName = ?, firstName = ?, middleInitial = ?, phoneNumber =?, email = ? WHERE id = ? `;
 
   const [result] = await mysql.execute(updateQuery, [
     lastName,
@@ -87,21 +87,21 @@ export const updateUserProfileData = async (id, data) => {
 };
 
 export const updateUserPasswordData = async (id, hashedPassword) => {
-  const updateQuery = `UPDATE users SET password = ? WHERE id = ? `;
+  const updateQuery = `UPDATE staff SET password = ? WHERE id = ? `;
 
   const [result] = await mysql.execute(updateQuery, [hashedPassword, id]);
   return result || null;
 };
 
 export const updateProfilePicture = async (id, profilePicUrl) => {
-  const updateQuery = `UPDATE users SET profile_picture = ? WHERE id = ? `;
+  const updateQuery = `UPDATE staff SET profile_picture = ? WHERE id = ? `;
 
   const [result] = await mysql.execute(updateQuery, [profilePicUrl, id]);
   return result || null;
 };
 
 export const getWebEmployeeData = async () => {
-  const selectQuery = `SELECT id, username, role, firstName, lastName, middleInitial, email, created_at, profile_picture, status, requested_role FROM users
+  const selectQuery = `SELECT id, username, role, firstName, lastName, middleInitial, email, created_at, profile_picture, status, requested_role FROM staff
   WHERE role IN ('super_admin', 'admin','staff') ORDER BY created_at DESC
   `;
 
@@ -110,35 +110,35 @@ export const getWebEmployeeData = async () => {
 };
 
 export const updateUserRole = async (id, requestedRole) => {
-  const updateQuery = `UPDATE users SET role = ?, requested_role = NULL WHERE id = ?`;
+  const updateQuery = `UPDATE staff SET role = ?, requested_role = NULL WHERE id = ?`;
 
   const [result] = await mysql.execute(updateQuery, [requestedRole, id]);
   return result || null;
 };
 
 export const requestRoleChange = async (id, requestRole) => {
-  const updateQuery = `UPDATE users SET requested_role = ? WHERE id = ?`;
+  const updateQuery = `UPDATE staff SET requested_role = ? WHERE id = ?`;
 
   const [result] = await mysql.execute(updateQuery, [requestRole, id]);
   return result || null;
 };
 
 export const deactivateUserById = async (id) => {
-  const updateQuery = `UPDATE users SET status = 'inactive' WHERE id = ? `;
+  const updateQuery = `UPDATE staff SET status = 'inactive' WHERE id = ? `;
 
   const [result] = await mysql.execute(updateQuery, [id]);
   return result || null;
 };
 
 export const activateUserById = async (id) => {
-  const updateQuery = `UPDATE users SET status = 'active' WHERE id = ? `;
+  const updateQuery = `UPDATE staff SET status = 'active' WHERE id = ? `;
 
   const [result] = await mysql.execute(updateQuery, [id]);
   return result || null;
 };
 
 export const deleteUserById = async (id) => {
-  const deleteQuery = `DELETE FROM users WHERE id = ? `;
+  const deleteQuery = `DELETE FROM staff WHERE id = ? `;
 
   const [result] = await mysql.execute(deleteQuery, [id]);
   return result.affectedRows > 0;
