@@ -17,7 +17,7 @@ export const getActiveDriverJobs = async (driverId) => {
 
 export const applyQueueLock = async (queueId, driverId, lockMinute = 5) => {
   const updateQuery =
-    "UPDATE queues SET locked_by_driver_id = ? lock_expires_at = DATE_ADD(NOW(), INTERVAL ? MINUTE), status = 'locked' WHERE id = ?";
+    "UPDATE queues SET locked_by_driver_id = ?, lock_expires_at = DATE_ADD(NOW(), INTERVAL ? MINUTE), status = 'locked' WHERE id = ?";
 
   const [result] = await mysql.execute(updateQuery, [
     driverId,
@@ -30,7 +30,7 @@ export const applyQueueLock = async (queueId, driverId, lockMinute = 5) => {
 
 export const confirmQueueRegistration = async (queueId, driverId) => {
   const updateQuery =
-    "UPDATE SET driver_id = ?, status = 'registered', scanned_at = NOW(), locked_by_driver_id = NULL, lock_expires_at = NULL WHERE id = ? AND locked_by_driver_id = ?";
+    "UPDATE queues SET driver_id = ?, status = 'registered', scanned_at = NOW(), locked_by_driver_id = NULL, lock_expires_at = NULL WHERE id = ? AND locked_by_driver_id = ?";
 
   const [result] = await mysql.execute(updateQuery, [
     driverId,

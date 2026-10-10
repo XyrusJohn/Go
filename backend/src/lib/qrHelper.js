@@ -19,7 +19,7 @@ export const verifyQrLoad = (qrData, maxAgeInSeconds = 60) => {
   if (!qrData || typeof qrData !== "string") {
     return { valid: false, error: "Invalid QR data" };
   }
-
+  // Split qrPayload into readable format for our system "prefix", "tripId", "timeStamp","recievedSignature"
   const parts = qrData.split(":");
   if (parts.length !== 4 || parts[0] !== "SYSU-QR-SCANNER") {
     return { valid: false, error: "Invalid QR data" };
