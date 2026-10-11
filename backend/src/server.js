@@ -7,6 +7,7 @@ import authRoutes from "../src/routes/auth.routes.js";
 import sapRoute from "../src/routes/sap.routes.js";
 import otpRoute from "../src/routes/otp.routes.js";
 import userRoute from "../src/routes/user.routes.js";
+import queueRoute from "../src/routes/queue.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -26,6 +27,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/sap", sapRoute);
 app.use("/api/otp", otpRoute);
 app.use("/api/user", userRoute);
+app.use("/api/queue", queueRoute);
 
 app.listen(PORT, async () => {
   console.log(`Server Connected ${PORT}`);
