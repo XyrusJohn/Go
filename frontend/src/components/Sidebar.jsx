@@ -20,22 +20,43 @@ import { Link } from "react-router-dom";
  * The connector line is created with CSS pseudo-elements to visually
  * associate submenu items with their parent menu section.
  */
-const SubMenuItem = ({ title, path, rightElement }) => (
-  <Link
-    to={path || "#"}
-    className="relative flex items-center h-10 hover:opacity-70
-               before:absolute before:left-0 before:top-[-8px] before:bottom-0
-               before:border-l-[1.5px] before:border-black
-               last:before:bottom-1/2"
-  >
-    <div className="absolute left-0 top-1/2 w-[16px] border-b-[1.5px] border-black"></div>
+const SubMenuItem = ({ title, path, rightElement, external }) => {
+  if (external) {
+    return (
+      <a
+        href={path || "#"}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="relative flex items-center h-10 hover:opacity-70
+                   before:absolute before:left-0 before:top-[-8px] before:bottom-0
+                   before:border-l-[1.5px] before:border-black
+                   last:before:bottom-1/2"
+      >
+        <div className="absolute left-0 top-1/2 w-[16px] border-b-[1.5px] border-black"></div>
+        <div className="ml-[24px] flex flex-1 items-center justify-between pr-4">
+          <span className="text-[14px] font-bold text-black">{title}</span>
+          {rightElement}
+        </div>
+      </a>
+    );
+  }
 
-    <div className="ml-[24px] flex flex-1 items-center justify-between pr-4">
-      <span className="text-[14px] font-bold text-black">{title}</span>
-      {rightElement}
-    </div>
-  </Link>
-);
+  return (
+    <Link
+      to={path || "#"}
+      className="relative flex items-center h-10 hover:opacity-70
+                 before:absolute before:left-0 before:top-[-8px] before:bottom-0
+                 before:border-l-[1.5px] before:border-black
+                 last:before:bottom-1/2"
+    >
+      <div className="absolute left-0 top-1/2 w-[16px] border-b-[1.5px] border-black"></div>
+      <div className="ml-[24px] flex flex-1 items-center justify-between pr-4">
+        <span className="text-[14px] font-bold text-black">{title}</span>
+        {rightElement}
+      </div>
+    </Link>
+  );
+};
 
 /**
  * Renders a primary sidebar menu section.
@@ -138,6 +159,11 @@ const Sidebar = () => {
             <MenuItem icon={Truck} title="Systems Management">
               <SubMenuItem title="Driver" />
               <SubMenuItem title="Dispatch" path="/dispatch" />
+              <SubMenuItem
+                title="QR Generator"
+                path="/qr-generator"
+                external={true}
+              />
               <SubMenuItem title="History" />
             </MenuItem>
 
