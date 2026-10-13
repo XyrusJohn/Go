@@ -1,9 +1,9 @@
-import { verifyQrLoad } from "../lib/qrHelper";
+import { verifyQrLoad } from "../lib/qrHelper.js";
 import {
   findQueueById,
   getActiveDriverJobs,
   applyQueueLock,
-} from "../models/queue.model";
+} from "../models/queue.model.js";
 
 export const scanAndLock = async (req, res) => {
   try {
