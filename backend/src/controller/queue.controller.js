@@ -1,9 +1,26 @@
-import { verifyQrLoad } from "../lib/qrHelper.js";
+import { verifyQrLoad, generateQrLoad } from "../lib/qrHelper.js";
 import {
   findQueueById,
   getActiveDriverJobs,
   applyQueueLock,
 } from "../models/queue.model.js";
+
+export const qrGenerator = () => {
+  try {
+    const qrPayload = generateQrLoad();
+
+    return res.status(200).json({
+      success: true,
+      qrPayload: qrPayload,
+    });
+  } catch (error) {
+    console.error("Error on qrGenerator controller: ", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
 
 export const scanAndLock = async (req, res) => {
   try {
