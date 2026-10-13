@@ -1,5 +1,7 @@
 import mysql from "../config/db.js";
 
+// Queue status ['pending', 'locked', 'registered', 'in_transit' ,'completed', 'cancelled']
+
 export const findQueueById = async (queueId) => {
   const selectQuery = "SELECT * FROM queues WHERE id = ? OR queue_code = ?";
 
