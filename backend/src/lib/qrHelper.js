@@ -3,9 +3,11 @@ import crypto from "crypto";
 const SECRET_KEY = process.env.SECRET_KEY;
 
 // function to generate QR load
-export const generateQrLoad = (tripId) => {
+export const generateQrLoad = () => {
   const timestamp = Date.now();
-  const rawData = `SYSU-QR-SCANNER:${tripId}:${timestamp}`;
+  const randomToken = crypto.randomBytes(16).toString("hex");
+  const rawData = `SYSU-QR-SCANNER:${randomToken}:${timestamp}`;
+
   const signature = crypto
     .createHmac("sha256", SECRET_KEY)
     .update(rawData)
@@ -25,21 +27,25 @@ export const verifyQrLoad = (qrData, maxAgeInSeconds = 60) => {
     return { valid: false, error: "Invalid QR data" };
   }
 
-  const [prefix, tripId, timestampStr, recievedSignature] = parts;
+  const [prefix, randomToken, timestampStr, recievedSignature] = parts;
   const timeStamp = Number(timestampStr);
 
   const ageInSeconds = (Date.now() - timeStamp) / 1000;
-  if (isNaN(ageInSeconds) || ageInSeconds > maxAgeInSeconds) {
+  if (
+    isNaN(ageInSeconds) ||
+    ageInSeconds < 0 ||
+    ageInSeconds > maxAgeInSeconds
+  ) {
     return { valid: false, error: "QR data expired" };
   }
 
   const expectedSignature = crypto
     .createHmac("sha256", SECRET_KEY)
-    .update(`${prefix}:${tripId}:${timestampStr}`)
+    .update(`${prefix}:${randomToken}:${timestampStr}`)
     .digest("hex");
   if (expectedSignature !== recievedSignature) {
     return { valid: false, error: "Invalid QR data" };
   }
 
-  return { valid: true, tripId, timestamp: timeStamp };
+  return { valid: true, randomToken, timestamp: timeStamp };
 };
