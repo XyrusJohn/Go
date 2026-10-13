@@ -15,6 +15,7 @@ import FleetManagement from "./pages/FleetManagement";
 import Profile from "./pages/Profile";
 import Dispatch from "./pages/Dispatch";
 import EmployeeAndStaff from "./pages/EmployeeAndStaff";
+import QrGenerator from "./pages/QrGenerator";
 
 // import Navbar from "./components/Navbar";
 
@@ -73,6 +74,10 @@ const App = () => {
         <Route
           path="/employee-and-staff"
           element={authUser ? <EmployeeAndStaff /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/qr-generator"
+          element={authUser ? <QrGenerator /> : <Navigate to="/login" />}
         />
       </Routes>
     </div>
